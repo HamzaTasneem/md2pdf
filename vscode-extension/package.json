@@ -1,0 +1,128 @@
+{
+  "name": "md2pdf",
+  "displayName": "MD2PDF — Markdown to PDF",
+  "description": "Export Markdown to clean, themed PDFs through Chrome's print engine. Table repair, Mermaid diagrams, syntax highlighting, batch export.",
+  "version": "1.0.0",
+  "publisher": "HamzaTasneem",
+  "license": "MIT",
+  "author": "Hamza Tasneem",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HamzaTasneem/md2pdf"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "pdf",
+    "export",
+    "print",
+    "mermaid"
+  ],
+  "main": "extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "md2pdf.export",
+        "title": "MD2PDF: Export to PDF"
+      },
+      {
+        "command": "md2pdf.exportFolder",
+        "title": "MD2PDF: Export all Markdown in folder to PDF"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "md2pdf.export",
+          "when": "resourceExtname =~ /^\\.(md|markdown|mdown|mkd)$/i",
+          "group": "md2pdf"
+        },
+        {
+          "command": "md2pdf.exportFolder",
+          "when": "explorerResourceIsFolder",
+          "group": "md2pdf"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "md2pdf.export",
+          "when": "editorLangId == markdown",
+          "group": "md2pdf"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "MD2PDF",
+      "properties": {
+        "md2pdf.fontFamily": {
+          "type": "string",
+          "default": "'Segoe UI', Arial, sans-serif",
+          "description": "Body font family (CSS font-family value)."
+        },
+        "md2pdf.fontSize": {
+          "type": "number",
+          "default": 14,
+          "description": "Base font size in pixels."
+        },
+        "md2pdf.accentColor": {
+          "type": "string",
+          "default": "#b8860b",
+          "description": "Accent color for headings, bold text and links."
+        },
+        "md2pdf.textColor": {
+          "type": "string",
+          "default": "#111111",
+          "description": "Body text color."
+        },
+        "md2pdf.lineWidth": {
+          "type": "string",
+          "enum": ["full", "90", "80", "70", "60"],
+          "default": "full",
+          "description": "Maximum characters per line (typographic measure)."
+        },
+        "md2pdf.pageMargin": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Page margins in inches."
+        },
+        "md2pdf.pageSize": {
+          "type": "string",
+          "enum": ["A4", "Letter", "Legal"],
+          "default": "A4",
+          "description": "PDF page size."
+        },
+        "md2pdf.headerFooter": {
+          "type": "boolean",
+          "default": false,
+          "description": "Add a title + date header and 'Page X of Y' footer."
+        },
+        "md2pdf.browserPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a Chrome/Edge/Chromium executable. Leave empty to auto-detect."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "postinstall": "node scripts/copy-assets.js",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.0",
+    "marked-highlight": "^2.2.4",
+    "puppeteer-core": "^24.0.0"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0",
+    "mermaid": "^11.16.0"
+  }
+}

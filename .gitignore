@@ -1,0 +1,9 @@
+node_modules/
+src/vendor/
+vscode-extension/node_modules/
+vscode-extension/assets/hljs.css
+vscode-extension/assets/mermaid.min.js
+*.vsix
+*.log
+.DS_Store
+Thumbs.db

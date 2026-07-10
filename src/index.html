@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src * data: file:; frame-src 'self' file: blob:; object-src 'self' file: blob:">
+  <title>MD2PDF</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="markdown.css">
+  <link rel="stylesheet" href="vendor/hljs.css">
+</head>
+<body>
+  <header id="toolbar">
+    <button id="collapseBtn" title="Show/hide file explorer (Ctrl+B)">☰</button>
+    <span id="brand">MD<em>2</em>PDF</span>
+    <button id="openFolderBtn" title="Open a folder of Markdown files">Open Folder</button>
+    <span id="currentFileName"></span>
+
+    <div class="seg" id="viewSeg">
+      <button id="viewPreviewBtn" class="active" title="Rendered preview">Preview</button>
+      <button id="viewCodeBtn" title="Edit raw Markdown (Ctrl+S saves)">Code</button>
+    </div>
+
+    <span class="spacer"></span>
+
+    <label title="Theme preset">
+      <select id="presetSelect"></select>
+    </label>
+    <button id="presetAddBtn" title="Save current font & colors as a preset">+</button>
+    <input id="presetName" placeholder="Preset name…" hidden>
+
+    <label title="Font family">
+      <select id="fontSelect">
+        <option value="'Segoe UI', Arial, sans-serif">Segoe UI</option>
+        <option value="Calibri, 'Segoe UI', sans-serif">Calibri</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Cambria, serif">Cambria</option>
+        <option value="Garamond, serif">Garamond</option>
+        <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+      </select>
+    </label>
+
+    <label title="Font size">
+      <select id="sizeSelect">
+        <option>12</option><option>13</option><option selected>14</option>
+        <option>15</option><option>16</option><option>17</option><option>18</option>
+      </select>
+    </label>
+
+    <input type="color" id="accentInput" value="#b8860b" title="Accent color (headings, bold, links)">
+    <input type="color" id="textInput" value="#111111" title="Text color">
+
+    <label title="Maximum characters per line">
+      <select id="measureSelect">
+        <option value="full" selected>Full width</option>
+        <option value="90">90 ch</option>
+        <option value="80">80 ch</option>
+        <option value="70">70 ch</option>
+        <option value="60">60 ch</option>
+      </select>
+    </label>
+
+    <label title="Page margins in the PDF">
+      <select id="marginSelect">
+        <option value="0.25">Narrow</option>
+        <option value="0.5" selected>Normal</option>
+        <option value="0.75">Wide</option>
+        <option value="1">Extra wide</option>
+      </select>
+    </label>
+
+    <label title="Page size">
+      <select id="pageSelect">
+        <option selected>A4</option>
+        <option>Letter</option>
+        <option>Legal</option>
+      </select>
+    </label>
+
+    <label class="chk" title="Title + date header, page numbers footer">
+      <input type="checkbox" id="hfCheck"> Nº
+    </label>
+
+    <button id="exportBtn" class="primary" title="Save PDF next to the Markdown file (Ctrl+P)">Export PDF</button>
+    <button id="exportAsBtn" title="Choose where to save the PDF">As&hellip;</button>
+  </header>
+
+  <div id="main">
+    <aside id="sidebar">
+      <input id="searchInput" placeholder="Search files…" spellcheck="false">
+      <div id="searchResults" hidden></div>
+      <div id="browser">
+        <div id="recentWrap" hidden>
+          <div class="side-head">Recent</div>
+          <div id="recentList"></div>
+        </div>
+        <div class="side-head" id="filesHead" hidden>Files</div>
+        <div id="treeEmpty">Open a folder to browse<br>your Markdown files</div>
+        <div id="tree"></div>
+      </div>
+    </aside>
+    <div id="splitter" title="Drag to resize · double-click to hide"></div>
+    <section id="previewWrap">
+      <div id="page">
+        <div id="preview" class="markdown-body">
+          <p class="placeholder">Select a Markdown file to preview it here,<br>or drag one onto this window.</p>
+        </div>
+        <textarea id="codeView" hidden spellcheck="false"></textarea>
+      </div>
+      <iframe id="pdfFrame" hidden></iframe>
+    </section>
+  </div>
+
+  <div id="ctxMenu" hidden></div>
+  <div id="toast" hidden></div>
+
+  <script src="vendor/mermaid.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

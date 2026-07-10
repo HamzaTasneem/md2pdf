@@ -1,0 +1,43 @@
+# md2pdf
+
+Electron desktop app for browsing Markdown files and exporting them to PDF with Chrome-quality output (uses Chromium's `printToPDF`, so results match Chrome's print-to-PDF exactly).
+
+## Stack
+- Electron (main process: [main.js](main.js), preload bridge: [preload.js](preload.js))
+- `marked` for Markdown → HTML (GFM enabled)
+- No bundler, no framework — plain HTML/CSS/JS renderer in [src/](src/)
+
+## Key files
+- `src/render.js` — shared pipeline: `fixMarkdown` (table/formatting repair), `renderMarkdown`, `buildDoc` (standalone HTML for printing)
+- `src/markdown.css` — document theme (black/white with gold accents), driven by CSS variables `--font-body`, `--font-size`, `--accent`, `--text`
+- `src/app.js` — renderer UI: file tree, preview, settings (persisted in localStorage), export
+
+## How to run
+- `npm install` (first time)
+- `npm start` or double-click `run.cmd`
+- Headless smoke test: `npx electron . --smoke <input.md> <output.pdf>` — exports a PDF and exits, prints `SMOKE OK`
+
+## Behavior notes
+- Export saves `<name>.pdf` next to the source `.md` and overwrites without asking; "As…" opens a save dialog
+- Sidebar is resizable by dragging the splitter (double-click or Ctrl+B or ☰ to collapse); width persists
+- Code view is an editor: Ctrl+S saves back to disk and refreshes the preview; dirty files show ● in the toolbar
+- Right-click a folder in the tree → "Export all to PDF" (non-recursive batch, progress via toast)
+- "Nº" checkbox adds title+date header and "Page X of Y" footer via Chromium's displayHeaderFooter
+- Code blocks get highlight.js (github theme); ```mermaid blocks render as diagrams (neutral theme) in preview and PDF — vendor copies live in `src/vendor/` (re-copy from node_modules after upgrading those deps)
+- Theme presets (font/size/colors) in localStorage; built-ins: REMAP Gold, Plain B&W
+- YAML front matter renders as a title block (`.fm` styles); unparseable front matter is stripped
+- Sidebar has filename search (recursive, capped 100 results), a Recent list (max 8), drag-and-drop opens files
+- Current file is watched via fs.watch; disk changes auto-reload unless the editor is dirty
+- PDFs in the tree open in an in-app viewer (iframe using Chromium's PDF plugin)
+- Smoke mode accepts `--hf` to test header/footer export
+- `fixMarkdown` drops empty table rows (including empty header rows above the separator), inserts missing separator rows, pads ragged columns, strips zero-width/non-breaking characters, collapses 3+ blank lines
+- Default theme: black text, gold (#b8860b) headings/bold/links, A4, 0.5in margins
+
+## Safe commands
+- `npm start`, `npx electron . --smoke ...`, `npm install`
+
+## Approval required
+- Adding dependencies, packaging/distribution changes (electron-builder etc.)
+
+## Forbidden
+- Committing `node_modules`; network calls at runtime (app is fully offline)

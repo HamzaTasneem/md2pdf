@@ -1,0 +1,5 @@
+scripts/**
+test/**
+node_modules/mermaid/**
+node_modules/@vscode/**
+*.vsix

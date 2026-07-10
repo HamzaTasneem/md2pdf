@@ -1,0 +1,22 @@
+{
+  "name": "md2pdf",
+  "productName": "MD2PDF",
+  "version": "1.0.0",
+  "description": "Browse Markdown files and export them to PDF with Chrome-quality formatting",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "node scripts/copy-vendor.js"
+  },
+  "license": "MIT",
+  "author": "Hamza Tasneem",
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.0",
+    "marked-highlight": "^2.2.4",
+    "mermaid": "^11.16.0"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0"
+  }
+}
