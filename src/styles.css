@@ -93,6 +93,27 @@ body { display: flex; flex-direction: column; }
 
 #collapseBtn { padding: 3px 7px; font-size: 13px; }
 
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn svg { display: block; }
+
+#urlBox { display: inline-flex; align-items: center; gap: 3px; }
+
+#urlInput {
+  background: #2a2a2a;
+  color: #eee;
+  border: 1px solid #d4a017;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11.5px;
+  width: 280px;
+  outline: none;
+}
+
 #presetAddBtn { padding: 3px 7px; font-weight: 700; }
 
 #presetName {
@@ -167,7 +188,23 @@ body { display: flex; flex-direction: column; }
   text-transform: uppercase;
   color: #999;
   padding: 6px 8px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.side-head button {
+  border: 0;
+  background: none;
+  color: #b8860b;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.side-head button:hover { background: #efece2; }
 
 #splitter {
   width: 5px;

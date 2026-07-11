@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, net } = require('electron');
 const path = require('path');
 const fs = require('fs/promises');
 const fsSync = require('fs');
@@ -28,6 +28,11 @@ function mermaidUrl() {
   return fsSync.existsSync(p) ? pathToFileURL(p).href : null;
 }
 
+function appIcon() {
+  const ico = path.join(__dirname, 'build', process.platform === 'win32' ? 'icon.ico' : 'icon.png');
+  return fsSync.existsSync(ico) ? ico : undefined;
+}
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1360,
@@ -36,6 +41,7 @@ function createWindow() {
     minHeight: 500,
     backgroundColor: '#f4f4f2',
     title: 'MD2PDF',
+    icon: appIcon(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -206,6 +212,29 @@ function registerIpc() {
         }, 300);
       });
     } catch {}
+  });
+
+  ipcMain.handle('net:importUrl', async (_e, { url, dir }) => {
+    let u = String(url || '').trim();
+    if (!/^https?:\/\//i.test(u)) throw new Error('URL must start with http:// or https://');
+    const gh = u.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+    if (gh) u = `https://raw.githubusercontent.com/${gh[1]}/${gh[2]}/${gh[3]}`;
+    const res = await net.fetch(u);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    if (text.length > 10 * 1024 * 1024) throw new Error('File too large (over 10 MB)');
+    const targetDir = dir || path.join(app.getPath('documents'), 'MD2PDF Imports');
+    await fs.mkdir(targetDir, { recursive: true });
+    let base = decodeURIComponent(path.basename(new URL(u).pathname)) || 'imported';
+    base = base.replace(/[<>:"/\\|?*]/g, '_').trim() || 'imported';
+    if (!MD_EXT.test(base)) base += '.md';
+    let out = path.join(targetDir, base);
+    let n = 1;
+    while (fsSync.existsSync(out)) {
+      out = path.join(targetDir, base.replace(MD_EXT, '') + `-${n++}.md`);
+    }
+    await fs.writeFile(out, text, 'utf8');
+    return out;
   });
 
   ipcMain.handle('shell:showItem', (_e, p) => shell.showItemInFolder(p));

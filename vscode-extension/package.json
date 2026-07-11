@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "publisher": "HamzaTasneem",
   "license": "MIT",
-  "author": "Hamza Tasneem",
+  "author": "Hamza Tasneem <hamza.tas1992@gmail.com>",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/HamzaTasneem/md2pdf"

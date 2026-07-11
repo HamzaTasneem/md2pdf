@@ -13,6 +13,13 @@
     <button id="collapseBtn" title="Show/hide file explorer (Ctrl+B)">☰</button>
     <span id="brand">MD<em>2</em>PDF</span>
     <button id="openFolderBtn" title="Open a folder of Markdown files">Open Folder</button>
+    <button id="importUrlBtn" class="icon-btn" title="Import Markdown from a URL">
+      <svg viewBox="0 0 16 16" width="14" height="14"><path d="M6.5 9.5 9.5 6.5M5 11l-1.5 1.5a2.4 2.4 0 0 1-3.4-3.4L3.5 5.7a2.4 2.4 0 0 1 3.4 0M11 5l1.5-1.5a2.4 2.4 0 0 1 3.4 3.4l-3.4 3.4a2.4 2.4 0 0 1-3.4 0" transform="translate(-1 -1)" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <span id="urlBox" hidden>
+      <input id="urlInput" placeholder="https://…/file.md — Enter to import" spellcheck="false">
+      <button id="importDirBtn" class="icon-btn" title="Choose the folder imports are saved to">▸</button>
+    </span>
     <span id="currentFileName"></span>
 
     <div class="seg" id="viewSeg">
@@ -84,8 +91,12 @@
       <input type="checkbox" id="hfCheck"> Nº
     </label>
 
-    <button id="exportBtn" class="primary" title="Save PDF next to the Markdown file (Ctrl+P)">Export PDF</button>
-    <button id="exportAsBtn" title="Choose where to save the PDF">As&hellip;</button>
+    <button id="exportBtn" class="primary icon-btn" title="Export PDF next to the Markdown file (Ctrl+P)">
+      <svg viewBox="0 0 16 16" width="15" height="15"><path d="M8 1.5v8.5M4.5 6.5 8 10l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13.5h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </button>
+    <button id="exportAsBtn" class="icon-btn" title="Export PDF — choose where to save (Save As)">
+      <svg viewBox="0 0 16 16" width="15" height="15"><path d="M2.5 2.5h8l3 3v8h-11z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 2.5v3.5h5V2.5M4.5 13.5V9h7v4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    </button>
   </header>
 
   <div id="main">
@@ -97,7 +108,10 @@
           <div class="side-head">Recent</div>
           <div id="recentList"></div>
         </div>
-        <div class="side-head" id="filesHead" hidden>Files</div>
+        <div class="side-head" id="filesHead" hidden>
+          <span>Files</span>
+          <button id="refreshBtn" title="Refresh file tree (F5)">⟳</button>
+        </div>
         <div id="treeEmpty">Open a folder to browse<br>your Markdown files</div>
         <div id="tree"></div>
       </div>

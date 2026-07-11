@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('api', {
   exportPdf: (opts) => ipcRenderer.invoke('pdf:export', opts),
   exportBatch: (opts) => ipcRenderer.invoke('pdf:exportBatch', opts),
   watchFile: (filePath) => ipcRenderer.invoke('watch:set', filePath),
+  importUrl: (url, dir) => ipcRenderer.invoke('net:importUrl', { url, dir }),
   showItem: (p) => ipcRenderer.invoke('shell:showItem', p),
   openItem: (p) => ipcRenderer.invoke('shell:openItem', p),
   getPathForFile: (file) => webUtils.getPathForFile(file),

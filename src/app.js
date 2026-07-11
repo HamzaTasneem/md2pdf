@@ -434,7 +434,7 @@ async function doExport(ask) {
   if (state.dirty) await saveCurrent();
   const btn = $('exportBtn');
   btn.disabled = true;
-  btn.textContent = 'Exporting…';
+  showToast('Exporting…', { sticky: true });
   try {
     const out = await window.api.exportPdf({
       filePath: state.currentFile,
@@ -442,11 +442,11 @@ async function doExport(ask) {
       ask
     });
     if (out) showToast('Saved ' + out + ' — click to show in folder', { path: out });
+    else toast.hidden = true;
   } catch (err) {
     showToast('Export failed: ' + err.message, { error: true });
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Export PDF';
     updateButtons();
   }
 }
@@ -526,6 +526,53 @@ $('openFolderBtn').addEventListener('click', async () => {
   if (dir) loadRoot(dir);
 });
 
+$('refreshBtn').addEventListener('click', () => {
+  if (state.rootDir) loadRoot(state.rootDir);
+});
+
+$('importUrlBtn').addEventListener('click', () => {
+  const box = $('urlBox');
+  box.hidden = !box.hidden;
+  if (!box.hidden) {
+    const dir = localStorage.getItem('md2pdf.importDir');
+    $('importDirBtn').title =
+      'Choose the folder imports are saved to\nCurrent: ' + (dir || 'Documents\\MD2PDF Imports');
+    $('urlInput').focus();
+  }
+});
+
+$('importDirBtn').addEventListener('click', async () => {
+  const dir = await window.api.openFolder();
+  if (!dir) return;
+  localStorage.setItem('md2pdf.importDir', dir);
+  $('importDirBtn').title = 'Choose the folder imports are saved to\nCurrent: ' + dir;
+  showToast('Imports will be saved to ' + dir);
+});
+
+$('urlInput').addEventListener('keydown', async (e) => {
+  if (e.key === 'Escape') {
+    $('urlBox').hidden = true;
+    return;
+  }
+  if (e.key !== 'Enter') return;
+  const url = e.target.value.trim();
+  if (!url) return;
+  e.target.disabled = true;
+  showToast('Importing…', { sticky: true });
+  try {
+    const out = await window.api.importUrl(url, localStorage.getItem('md2pdf.importDir') || null);
+    e.target.value = '';
+    $('urlBox').hidden = true;
+    showToast('Imported ' + out + ' — click to show in folder', { path: out });
+    openPath(out);
+    if (state.rootDir && out.toLowerCase().startsWith(state.rootDir.toLowerCase())) loadRoot(state.rootDir);
+  } catch (err) {
+    showToast('Import failed: ' + err.message, { error: true });
+  } finally {
+    e.target.disabled = false;
+  }
+});
+
 $('exportBtn').addEventListener('click', () => doExport(false));
 $('exportAsBtn').addEventListener('click', () => doExport(true));
 
@@ -602,6 +649,11 @@ $('hfCheck').addEventListener('change', (e) => {
 });
 
 window.addEventListener('keydown', (e) => {
+  if (e.key === 'F5') {
+    e.preventDefault();
+    if (state.rootDir) loadRoot(state.rootDir);
+    return;
+  }
   if (!(e.ctrlKey || e.metaKey)) return;
   const k = e.key.toLowerCase();
   if (k === 'p' || k === 'e') {
