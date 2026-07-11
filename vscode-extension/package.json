@@ -99,6 +99,12 @@
           "default": "A4",
           "description": "PDF page size."
         },
+        "md2pdf.orientation": {
+          "type": "string",
+          "enum": ["portrait", "landscape"],
+          "default": "portrait",
+          "description": "PDF page orientation."
+        },
         "md2pdf.headerFooter": {
           "type": "boolean",
           "default": false,

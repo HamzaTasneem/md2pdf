@@ -78,6 +78,7 @@ async function exportPdf(mdPath, outPath, settings, assetsDir) {
       path: outPath,
       printBackground: true,
       format: settings.pageSize || 'A4',
+      landscape: !!settings.landscape,
       margin: {
         top: (hf ? Math.max(m, 0.65) : m) + 'in',
         bottom: (hf ? Math.max(m, 0.6) : m) + 'in',

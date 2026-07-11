@@ -119,6 +119,7 @@ async function exportPdf(filePath, settings, outPath) {
     const opts = {
       printBackground: true,
       pageSize: settings.pageSize || 'A4',
+      landscape: !!settings.landscape,
       margins: {
         top: hf ? Math.max(m, 0.65) : m,
         bottom: hf ? Math.max(m, 0.6) : m,
@@ -242,7 +243,10 @@ function registerIpc() {
 }
 
 async function runSmoke(input, output) {
-  const settings = process.argv.includes('--hf') ? { hf: true } : {};
+  const settings = {
+    hf: process.argv.includes('--hf'),
+    landscape: process.argv.includes('--landscape')
+  };
   await exportPdf(path.resolve(input), settings, path.resolve(output));
   console.log('SMOKE OK: ' + path.resolve(output));
 }

@@ -87,6 +87,13 @@
       </select>
     </label>
 
+    <label title="Page orientation">
+      <select id="orientSelect">
+        <option value="portrait" selected>Portrait</option>
+        <option value="landscape">Landscape</option>
+      </select>
+    </label>
+
     <label class="chk" title="Title + date header, page numbers footer">
       <input type="checkbox" id="hfCheck"> Nº
     </label>
@@ -125,6 +132,12 @@
         <textarea id="codeView" hidden spellcheck="false"></textarea>
       </div>
       <iframe id="pdfFrame" hidden></iframe>
+      <div id="pdfBar" hidden>
+        <button data-view="view=FitH" title="Fit to width">⬌ Width</button>
+        <button data-view="view=Fit" title="Fit whole page">▭ Page</button>
+        <button data-view="zoom=100" title="Actual size">100%</button>
+        <button data-view="zoom=150" title="Zoom 150%">150%</button>
+      </div>
     </section>
   </div>
 

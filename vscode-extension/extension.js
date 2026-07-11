@@ -14,6 +14,7 @@ function getSettings() {
     measure: c.get('lineWidth'),
     margin: c.get('pageMargin'),
     pageSize: c.get('pageSize'),
+    landscape: c.get('orientation') === 'landscape',
     hf: c.get('headerFooter'),
     browserPath: c.get('browserPath')
   };

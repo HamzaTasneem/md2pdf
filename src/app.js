@@ -28,10 +28,12 @@ const state = {
     accent: '#b8860b',
     text: '#111111',
     pageSize: 'A4',
+    landscape: false,
     measure: 'full',
     margin: 0.5,
     hf: false
-  }
+  },
+  pdfBase: null
 };
 
 let toastTimer = null;
@@ -100,6 +102,7 @@ function applySettings() {
     preview.style.marginLeft = '';
     preview.style.marginRight = '';
   }
+  page.style.width = s.landscape ? '1123px' : '';
   localStorage.setItem('md2pdf.settings', JSON.stringify(s));
 }
 
@@ -114,6 +117,7 @@ function loadSettings() {
   $('accentInput').value = s.accent;
   $('textInput').value = s.text;
   $('pageSelect').value = s.pageSize;
+  $('orientSelect').value = s.landscape ? 'landscape' : 'portrait';
   $('measureSelect').value = String(s.measure);
   if (!$('measureSelect').value) $('measureSelect').value = 'full';
   $('marginSelect').value = String(s.margin);
@@ -205,6 +209,21 @@ function confirmDiscard() {
   return !state.dirty || confirm('You have unsaved changes. Discard them?');
 }
 
+function setPdfView(param) {
+  if (!state.pdfBase) return;
+  document.querySelectorAll('#pdfBar button').forEach((b) =>
+    b.classList.toggle('active', b.dataset.view === param)
+  );
+  pdfFrame.src = 'about:blank';
+  setTimeout(() => {
+    pdfFrame.src = state.pdfBase + '#' + param;
+  }, 30);
+}
+
+document.querySelectorAll('#pdfBar button').forEach((b) =>
+  b.addEventListener('click', () => setPdfView(b.dataset.view))
+);
+
 function showPdf(filePath) {
   state.currentFile = filePath;
   state.currentKind = 'pdf';
@@ -212,7 +231,9 @@ function showPdf(filePath) {
   page.hidden = true;
   pdfFrame.hidden = false;
   previewWrap.classList.add('pdf-mode');
-  pdfFrame.src = 'file:///' + filePath.replace(/\\/g, '/');
+  state.pdfBase = 'file:///' + filePath.replace(/\\/g, '/');
+  setPdfView('view=FitH');
+  $('pdfBar').hidden = false;
   setDirty(false);
   $('currentFileName').textContent = filePath.split(/[\\/]/).pop();
   $('currentFileName').title = filePath;
@@ -230,6 +251,7 @@ async function showMd(filePath, labelEl) {
     previewWrap.classList.remove('pdf-mode');
     pdfFrame.hidden = true;
     pdfFrame.src = 'about:blank';
+    $('pdfBar').hidden = true;
     page.hidden = false;
     preview.innerHTML = html;
     renderMermaidIn(preview);
@@ -641,6 +663,10 @@ $('marginSelect').addEventListener('change', (e) => {
 });
 $('pageSelect').addEventListener('change', (e) => {
   state.settings.pageSize = e.target.value;
+  applySettings();
+});
+$('orientSelect').addEventListener('change', (e) => {
+  state.settings.landscape = e.target.value === 'landscape';
   applySettings();
 });
 $('hfCheck').addEventListener('change', (e) => {
