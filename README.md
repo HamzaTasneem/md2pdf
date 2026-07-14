@@ -20,6 +20,10 @@ Built for the everyday case: AI tools and note apps produce piles of `.md` files
 
 ## Desktop app
 
+**Windows installer:** download `MD2PDF-Setup-<version>.exe` from the [releases page](https://github.com/HamzaTasneem/md2pdf/releases) and run it. You get a desktop shortcut, and `.md` files gain an "Open with → MD2PDF" entry in Explorer.
+
+**From source:**
+
 ```bash
 git clone https://github.com/HamzaTasneem/md2pdf.git
 cd md2pdf
@@ -27,7 +31,7 @@ npm install
 npm start
 ```
 
-On Windows you can also double-click `run.cmd`.
+On Windows you can also double-click `run.cmd`. Build your own installer with `npm run dist` (electron-builder; mac/linux targets are configured too).
 
 Headless export (no window):
 

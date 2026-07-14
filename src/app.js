@@ -532,6 +532,14 @@ window.addEventListener('drop', (e) => {
 
 /* ---------- watch mode ---------- */
 
+window.api.onOpenFile((filePath) => {
+  openPath(filePath);
+  if (!state.rootDir) {
+    const parent = filePath.replace(/[\\/][^\\/]*$/, '');
+    if (parent) loadRoot(parent);
+  }
+});
+
 window.api.onFileChanged((filePath) => {
   if (filePath !== state.currentFile) return;
   if (state.dirty) {

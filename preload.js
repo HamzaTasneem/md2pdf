@@ -16,5 +16,6 @@ contextBridge.exposeInMainWorld('api', {
   openItem: (p) => ipcRenderer.invoke('shell:openItem', p),
   getPathForFile: (file) => webUtils.getPathForFile(file),
   onBatchProgress: (cb) => ipcRenderer.on('batch-progress', (_e, data) => cb(data)),
+  onOpenFile: (cb) => ipcRenderer.on('open-file', (_e, filePath) => cb(filePath)),
   onFileChanged: (cb) => ipcRenderer.on('file-changed', (_e, filePath) => cb(filePath))
 });

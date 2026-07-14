@@ -7,7 +7,16 @@ const { renderMarkdown, buildDoc, esc } = require('./src/render');
 
 const MD_EXT = /\.(md|markdown|mdown|mkd)$/i;
 const PDF_EXT = /\.pdf$/i;
+const OPENABLE = /\.(md|markdown|mdown|mkd|pdf)$/i;
 let win = null;
+
+function fileFromArgv(argv) {
+  return argv
+    .slice(1)
+    .filter((a) => !a.startsWith('-'))
+    .reverse()
+    .find((a) => OPENABLE.test(a) && fsSync.existsSync(a));
+}
 let cssCache = null;
 let watcher = null;
 
@@ -50,6 +59,10 @@ function createWindow() {
   });
   win.setMenuBarVisibility(false);
   win.loadFile(path.join(__dirname, 'src', 'index.html'));
+  win.webContents.once('did-finish-load', () => {
+    const f = fileFromArgv(process.argv);
+    if (f) win.webContents.send('open-file', path.resolve(f));
+  });
 }
 
 async function listDir(dirPath) {
@@ -251,9 +264,25 @@ async function runSmoke(input, output) {
   console.log('SMOKE OK: ' + path.resolve(output));
 }
 
+const isSmoke = process.argv.includes('--smoke');
+
+if (!isSmoke) {
+  if (!app.requestSingleInstanceLock()) {
+    app.quit();
+  } else {
+    app.on('second-instance', (_e, argv) => {
+      if (!win) return;
+      if (win.isMinimized()) win.restore();
+      win.focus();
+      const f = fileFromArgv(argv);
+      if (f) win.webContents.send('open-file', path.resolve(f));
+    });
+  }
+}
+
 app.whenReady().then(async () => {
-  const smokeIdx = process.argv.indexOf('--smoke');
-  if (smokeIdx > -1) {
+  if (isSmoke) {
+    const smokeIdx = process.argv.indexOf('--smoke');
     try {
       await runSmoke(process.argv[smokeIdx + 1], process.argv[smokeIdx + 2]);
       app.exit(0);

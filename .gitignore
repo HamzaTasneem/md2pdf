@@ -1,5 +1,6 @@
 node_modules/
 src/vendor/
+dist/
 vscode-extension/node_modules/
 vscode-extension/assets/hljs.css
 vscode-extension/assets/mermaid.min.js

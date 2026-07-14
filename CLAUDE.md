@@ -36,6 +36,11 @@ Electron desktop app for browsing Markdown files and exporting them to PDF with 
 - `fixMarkdown` drops empty table rows (including empty header rows above the separator), inserts missing separator rows, pads ragged columns, strips zero-width/non-breaking characters, collapses 3+ blank lines
 - Default theme: black text, gold (#b8860b) headings/bold/links, A4, 0.5in margins
 
+## Packaging
+- `npm run dist` builds a Windows NSIS installer into `dist/` (one-click, desktop shortcut, registers .md/.markdown "Open with" associations)
+- App is single-instance; a file path in argv (from Open with / double-click) opens in the existing window via the `open-file` IPC event
+- `mermaid` is a devDependency on purpose — only its dist file is shipped (via `scripts/copy-vendor.js`); don't move it to dependencies or the installer bloats
+
 ## Safe commands
 - `npm start`, `npx electron . --smoke ...`, `npm install`
 

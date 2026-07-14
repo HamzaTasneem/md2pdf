@@ -6,7 +6,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "node scripts/copy-vendor.js"
+    "postinstall": "node scripts/copy-vendor.js",
+    "dist": "electron-builder --win"
   },
   "license": "MIT",
   "author": "Hamza Tasneem <hamza.tas1992@gmail.com>",
@@ -17,11 +18,57 @@
   "dependencies": {
     "highlight.js": "^11.11.1",
     "marked": "^15.0.0",
-    "marked-highlight": "^2.2.4",
-    "mermaid": "^11.16.0"
+    "marked-highlight": "^2.2.4"
   },
   "devDependencies": {
     "electron": "^37.0.0",
+    "electron-builder": "^26.0.0",
+    "mermaid": "^11.16.0",
     "png-to-ico": "^3.0.2"
+  },
+  "build": {
+    "appId": "com.hamzatasneem.md2pdf",
+    "productName": "MD2PDF",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "build/icon.ico",
+      "fileAssociations": [
+        {
+          "ext": "md",
+          "name": "Markdown",
+          "description": "Markdown document",
+          "role": "Editor"
+        },
+        {
+          "ext": "markdown",
+          "name": "Markdown",
+          "description": "Markdown document",
+          "role": "Editor"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "build/icon.png",
+      "category": "Office"
+    }
   }
 }
